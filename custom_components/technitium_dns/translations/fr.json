@@ -1,0 +1,80 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Technitium DNS",
+        "description": "Connecter Home Assistant a l'API HTTP de Technitium DNS.",
+        "data": {
+          "name": "Nom",
+          "url": "URL du serveur",
+          "token": "Token API",
+          "scan_interval": "Intervalle de mise a jour"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Connexion impossible",
+      "invalid_auth": "Authentification invalide",
+      "unknown": "Erreur inattendue"
+    },
+    "abort": {
+      "already_configured": "Ce serveur Technitium DNS est deja configure"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options Technitium DNS",
+        "data": {
+          "name": "Nom",
+          "url": "URL du serveur",
+          "token": "Token API",
+          "scan_interval": "Intervalle de mise a jour"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Connexion impossible",
+      "invalid_auth": "Authentification invalide",
+      "unknown": "Erreur inattendue"
+    }
+  },
+  "entity": {
+    "button": {
+      "pause_blocking_1_minute": {
+        "name": "Pause du blocage pendant 1 minute"
+      },
+      "pause_blocking_5_minutes": {
+        "name": "Pause du blocage pendant 5 minutes"
+      },
+      "pause_blocking_10_minutes": {
+        "name": "Pause du blocage pendant 10 minutes"
+      }
+    },
+    "switch": {
+      "blocking": {
+        "name": "Blocage"
+      }
+    },
+    "sensor": {
+      "uptime": {
+        "name": "Duree de fonctionnement"
+      },
+      "total_queries": {
+        "name": "Requetes totales"
+      },
+      "total_blocked": {
+        "name": "Requetes bloquees"
+      },
+      "total_cached": {
+        "name": "Requetes en cache"
+      },
+      "total_refused": {
+        "name": "Requetes refusees"
+      },
+      "total_clients": {
+        "name": "Clients totaux"
+      }
+    }
+  }
+}

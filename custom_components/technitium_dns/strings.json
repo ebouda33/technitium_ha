@@ -1,0 +1,80 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Technitium DNS",
+        "description": "Connect Home Assistant to the Technitium DNS HTTP API.",
+        "data": {
+          "name": "Name",
+          "url": "Server URL",
+          "token": "API token",
+          "scan_interval": "Scan interval"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This Technitium DNS server is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Technitium DNS options",
+        "data": {
+          "name": "Name",
+          "url": "Server URL",
+          "token": "API token",
+          "scan_interval": "Scan interval"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    }
+  },
+  "entity": {
+    "button": {
+      "pause_blocking_1_minute": {
+        "name": "Pause blocking for 1 minute"
+      },
+      "pause_blocking_5_minutes": {
+        "name": "Pause blocking for 5 minutes"
+      },
+      "pause_blocking_10_minutes": {
+        "name": "Pause blocking for 10 minutes"
+      }
+    },
+    "switch": {
+      "blocking": {
+        "name": "Blocking"
+      }
+    },
+    "sensor": {
+      "uptime": {
+        "name": "Uptime"
+      },
+      "total_queries": {
+        "name": "Total queries"
+      },
+      "total_blocked": {
+        "name": "Total blocked"
+      },
+      "total_cached": {
+        "name": "Total cached"
+      },
+      "total_refused": {
+        "name": "Total refused"
+      },
+      "total_clients": {
+        "name": "Total clients"
+      }
+    }
+  }
+}

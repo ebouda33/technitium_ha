@@ -1,0 +1,11 @@
+{
+  "domain": "technitium_dns",
+  "name": "Technitium DNS",
+  "codeowners": [],
+  "config_flow": true,
+  "documentation": "https://github.com/TechnitiumSoftware/DnsServer/blob/master/APIDOCS.md",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "0.1.0"
+}
