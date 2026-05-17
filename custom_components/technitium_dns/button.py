@@ -11,6 +11,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from . import TechnitiumConfigEntry
 from .const import CONF_ENABLE_BUTTONS, DEFAULT_ENABLE_ENTITIES
 from .coordinator import TechnitiumDataUpdateCoordinator
+from .entity import build_device_info
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -113,7 +114,7 @@ async def async_setup_entry(
 
     coordinator = entry.runtime_data
     async_add_entities(
-        TechnitiumPauseButton(coordinator, entry.entry_id, description)
+        TechnitiumPauseButton(coordinator, entry.entry_id, entry.title, description)
         for description in PAUSE_BUTTONS
     )
 
@@ -130,12 +131,14 @@ class TechnitiumPauseButton(
         self,
         coordinator: TechnitiumDataUpdateCoordinator,
         entry_id: str,
+        entry_title: str,
         description: TechnitiumPauseButtonEntityDescription,
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry_id}_{description.key}"
         self._attr_has_entity_name = True
+        self._attr_device_info = build_device_info(coordinator, entry_id, entry_title)
 
     async def async_press(self) -> None:
         """Run the Technitium DNS action."""

@@ -8,6 +8,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from . import TechnitiumConfigEntry
 from .const import CONF_ENABLE_SELECTS, DEFAULT_ENABLE_ENTITIES
 from .coordinator import TechnitiumDataUpdateCoordinator
+from .entity import build_device_info
 
 PAUSE_DURATION_OPTIONS = {
     "1 min": 1,
@@ -29,7 +30,7 @@ async def async_setup_entry(
         return
 
     async_add_entities(
-        [TechnitiumPauseDurationSelect(entry.runtime_data, entry.entry_id)]
+        [TechnitiumPauseDurationSelect(entry.runtime_data, entry.entry_id, entry.title)]
     )
 
 
@@ -47,9 +48,11 @@ class TechnitiumPauseDurationSelect(
         self,
         coordinator: TechnitiumDataUpdateCoordinator,
         entry_id: str,
+        entry_title: str,
     ) -> None:
         super().__init__(coordinator)
         self._attr_unique_id = f"{entry_id}_pause_duration"
+        self._attr_device_info = build_device_info(coordinator, entry_id, entry_title)
 
     @property
     def current_option(self) -> str:

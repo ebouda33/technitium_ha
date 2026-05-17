@@ -15,13 +15,62 @@ Custom integration for Technitium DNS Server.
 - Expose blocking status, pause remaining time, version, blocking percentage,
   today's stats when available, and block list update details.
 
-## Install
+## Installation with HACS
 
-Copy `custom_components/technitium_dns` into your Home Assistant `custom_components`
-directory, then restart Home Assistant.
+This integration can be installed with HACS as a custom repository.
 
-Add the integration from **Settings > Devices & services > Add integration** and
-search for **Technitium DNS**.
+1. Open **HACS** in Home Assistant.
+2. Open the three-dot menu in the top right.
+3. Select **Custom repositories**.
+4. Add this repository URL:
+
+```text
+https://github.com/ebouda33/technitium_ha
+```
+
+5. Select the category **Integration**.
+6. Click **Add**.
+7. Search for **Technitium DNS** in HACS.
+8. Download the integration.
+9. Restart Home Assistant.
+10. Open **Settings > Devices & services > Add integration**.
+11. Search for **Technitium DNS** and complete the setup.
+
+## Updating with HACS
+
+When a new version is available:
+
+1. Open **HACS**.
+2. Open **Technitium DNS**.
+3. Click **Update**.
+4. Restart Home Assistant.
+
+If HACS reports that a commit version cannot be used, make sure you are using a
+published GitHub release such as `v0.1.2`, not only the default branch commit.
+
+## Manual Installation
+
+If you do not use HACS, copy `custom_components/technitium_dns` into your Home
+Assistant `custom_components` directory, then restart Home Assistant.
+
+Then add the integration from **Settings > Devices & services > Add integration**
+and search for **Technitium DNS**.
+
+## Dashboard
+
+After adding the integration, open your dashboard, choose **Edit dashboard**,
+then add a **Manual** card and paste the example from
+`examples/dashboard.yaml`.
+
+The default entity IDs are based on the integration name. If you renamed the
+integration during setup, replace the `technitium_dns` part in the YAML with
+the entity prefix created by Home Assistant.
+
+You can also add entities from the device page:
+
+1. Open **Settings > Devices & services > Technitium DNS**.
+2. Open the Technitium DNS device.
+3. Use the listed controls and sensors to add the ones you want to a dashboard.
 
 ## Token
 

@@ -20,6 +20,7 @@ from homeassistant.util import dt as dt_util
 from . import TechnitiumConfigEntry
 from .const import CONF_ENABLE_SENSORS, DEFAULT_ENABLE_ENTITIES
 from .coordinator import TechnitiumDataUpdateCoordinator
+from .entity import build_device_info
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -221,7 +222,7 @@ async def async_setup_entry(
 
     coordinator = entry.runtime_data
     async_add_entities(
-        TechnitiumSensor(coordinator, entry.entry_id, description)
+        TechnitiumSensor(coordinator, entry.entry_id, entry.title, description)
         for description in SENSORS
     )
 
@@ -235,12 +236,14 @@ class TechnitiumSensor(CoordinatorEntity[TechnitiumDataUpdateCoordinator], Senso
         self,
         coordinator: TechnitiumDataUpdateCoordinator,
         entry_id: str,
+        entry_title: str,
         description: TechnitiumSensorEntityDescription,
     ) -> None:
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry_id}_{description.key}"
         self._attr_has_entity_name = True
+        self._attr_device_info = build_device_info(coordinator, entry_id, entry_title)
 
     @property
     def native_value(self) -> int | str | None:
