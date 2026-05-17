@@ -40,7 +40,7 @@ class TechnitiumPauseDurationSelect(
 ):
     """Select the pause duration used by the selected pause button."""
 
-    _attr_has_entity_name = False
+    _attr_has_entity_name = True
     _attr_translation_key = "pause_duration"
     _attr_options = list(PAUSE_DURATION_OPTIONS)
 

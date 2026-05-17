@@ -242,7 +242,7 @@ class TechnitiumSensor(CoordinatorEntity[TechnitiumDataUpdateCoordinator], Senso
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry_id}_{description.key}"
-        self._attr_has_entity_name = False
+        self._attr_has_entity_name = True
         self._attr_device_info = build_device_info(coordinator, entry_id, entry_title)
 
     @property
