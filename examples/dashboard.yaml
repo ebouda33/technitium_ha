@@ -1,0 +1,92 @@
+type: vertical-stack
+cards:
+  - type: entities
+    title: Technitium DNS
+    show_header_toggle: false
+    entities:
+      - entity: sensor.technitium_dns_blocking_status
+        name: Blocking status
+      - entity: switch.technitium_dns_blocking
+        name: Blocking
+      - entity: sensor.technitium_dns_pause_remaining
+        name: Pause remaining
+      - entity: select.technitium_dns_pause_duration
+        name: Pause duration
+      - entity: button.technitium_dns_pause_selected_duration
+        name: Pause selected duration
+      - entity: button.technitium_dns_reactivate_now
+        name: Reactivate now
+
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: button
+        entity: button.technitium_dns_pause_5_min
+        name: Pause 5 min
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.technitium_dns_pause_5_min
+      - type: button
+        entity: button.technitium_dns_pause_30_min
+        name: Pause 30 min
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.technitium_dns_pause_30_min
+      - type: button
+        entity: button.technitium_dns_pause_1_h
+        name: Pause 1 h
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.technitium_dns_pause_1_h
+      - type: button
+        entity: button.technitium_dns_flush_dns_cache
+        name: Flush cache
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.technitium_dns_flush_dns_cache
+      - type: button
+        entity: button.technitium_dns_update_blocklists
+        name: Update lists
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.technitium_dns_update_blocklists
+      - type: button
+        entity: button.technitium_dns_reactivate_now
+        name: Reactivate
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.technitium_dns_reactivate_now
+
+  - type: entities
+    title: Statistics
+    show_header_toggle: false
+    entities:
+      - entity: sensor.technitium_dns_queries_today
+        name: Queries today
+      - entity: sensor.technitium_dns_blocked_today
+        name: Blocked today
+      - entity: sensor.technitium_dns_blocking_percentage
+        name: Blocking percentage
+      - entity: sensor.technitium_dns_total_queries
+        name: Total queries
+      - entity: sensor.technitium_dns_total_blocked
+        name: Total blocked
+      - entity: sensor.technitium_dns_total_clients
+        name: Total clients
+      - entity: sensor.technitium_dns_blocklists
+        name: Blocklists
+      - entity: sensor.technitium_dns_next_blocklist_update
+        name: Next blocklist update
