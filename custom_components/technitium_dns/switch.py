@@ -32,7 +32,7 @@ class TechnitiumBlockingSwitch(
 ):
     """Switch to enable or suspend Technitium DNS blocking."""
 
-    _attr_has_entity_name = True
+    _attr_has_entity_name = False
     _attr_translation_key = "blocking"
 
     def __init__(
