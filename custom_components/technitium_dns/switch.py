@@ -6,6 +6,7 @@ from homeassistant.components.switch import SwitchEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import TechnitiumConfigEntry
+from .const import CONF_ENABLE_SWITCHES, DEFAULT_ENABLE_ENTITIES
 from .coordinator import TechnitiumDataUpdateCoordinator
 
 
@@ -15,6 +16,10 @@ async def async_setup_entry(
     async_add_entities,
 ) -> None:
     """Set up Technitium DNS switches."""
+    data = {**entry.data, **entry.options}
+    if not data.get(CONF_ENABLE_SWITCHES, DEFAULT_ENABLE_ENTITIES):
+        return
+
     async_add_entities([TechnitiumBlockingSwitch(entry.runtime_data, entry.entry_id)])
 
 

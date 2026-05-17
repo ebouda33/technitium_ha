@@ -31,6 +31,7 @@ class TechnitiumDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             update_interval=update_interval,
         )
         self.api = api
+        self.selected_pause_minutes = 5
 
     async def _async_update_data(self) -> dict[str, Any]:
         """Fetch data from Technitium."""
@@ -39,8 +40,14 @@ class TechnitiumDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             metrics = await self.api.async_get_metrics()
         except TechnitiumApiError as err:
             raise UpdateFailed(str(err)) from err
+        try:
+            day_stats = await self.api.async_get_stats("LastDay")
+        except TechnitiumApiError:
+            day_stats = {}
 
         return {
             "settings": settings,
             "metrics": metrics,
+            "day_stats": day_stats,
+            "temporary_disable_until": self.api.last_temporary_disable_until,
         }

@@ -6,7 +6,7 @@ from json import JSONDecodeError
 from typing import Any
 from urllib.parse import urljoin
 
-from aiohttp import ClientError, ClientResponseError, ClientSession
+from aiohttp import ClientError, ClientResponseError, ClientSession, ClientTimeout
 
 
 class TechnitiumApiError(Exception):
@@ -28,10 +28,21 @@ class TechnitiumResponseError(TechnitiumApiError):
 class TechnitiumApiClient:
     """Small async client for the Technitium DNS HTTP API."""
 
-    def __init__(self, session: ClientSession, base_url: str, token: str) -> None:
+    def __init__(
+        self,
+        session: ClientSession,
+        base_url: str,
+        token: str,
+        *,
+        timeout: int = 10,
+        verify_ssl: bool = True,
+    ) -> None:
         self._session = session
         self._base_url = self._normalize_url(base_url)
         self._token = token
+        self._timeout = ClientTimeout(total=timeout)
+        self._ssl = None if verify_ssl else False
+        self.last_temporary_disable_until: str | None = None
 
     @property
     def base_url(self) -> str:
@@ -53,11 +64,33 @@ class TechnitiumApiClient:
 
     async def async_temporary_disable_blocking(self, minutes: int) -> None:
         """Temporarily disable Technitium DNS blocking."""
-        await self._request(
+        data = await self._request(
             "POST",
             "/api/settings/temporaryDisableBlocking",
             data={"minutes": str(minutes)},
         )
+        response = data.get("response", {})
+        if response:
+            self.last_temporary_disable_until = response.get(
+                "temporaryDisableBlockingTill"
+            )
+
+    async def async_force_update_blocklists(self) -> None:
+        """Force Technitium DNS block lists update."""
+        await self._request("POST", "/api/settings/forceUpdateBlockLists")
+
+    async def async_flush_cache(self) -> None:
+        """Flush Technitium DNS cache."""
+        await self._request("POST", "/api/cache/flush")
+
+    async def async_get_stats(self, stats_type: str) -> dict[str, Any]:
+        """Return dashboard stats."""
+        data = await self._request(
+            "GET",
+            "/api/dashboard/stats/get",
+            params={"type": stats_type, "utc": "true"},
+        )
+        return data.get("response", {})
 
     async def async_get_metrics(self) -> dict[str, Any]:
         """Return dashboard lifetime metrics."""
@@ -87,6 +120,8 @@ class TechnitiumApiClient:
                 params=params,
                 data=data,
                 headers=headers,
+                timeout=self._timeout,
+                ssl=self._ssl,
             ) as response:
                 response.raise_for_status()
                 payload = await response.json(content_type=None)

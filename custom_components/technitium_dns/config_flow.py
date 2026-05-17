@@ -18,13 +18,27 @@ from .api import (
     TechnitiumResponseError,
 )
 from .const import (
+    CONF_DEFAULT_PAUSE_MINUTES,
+    CONF_ENABLE_BUTTONS,
+    CONF_ENABLE_SELECTS,
+    CONF_ENABLE_SENSORS,
+    CONF_ENABLE_SWITCHES,
     CONF_SCAN_INTERVAL,
+    CONF_TIMEOUT,
     CONF_TOKEN,
+    CONF_VERIFY_SSL,
+    DEFAULT_ENABLE_ENTITIES,
     DEFAULT_NAME,
+    DEFAULT_PAUSE_MINUTES,
     DEFAULT_SCAN_INTERVAL,
+    DEFAULT_TIMEOUT,
+    DEFAULT_VERIFY_SSL,
     DOMAIN,
     MIN_SCAN_INTERVAL,
+    MIN_TIMEOUT,
 )
+
+PAUSE_MINUTES = [1, 5, 10, 30, 60]
 
 
 def _user_schema(user_input: dict[str, Any] | None = None) -> vol.Schema:
@@ -41,6 +55,36 @@ def _user_schema(user_input: dict[str, Any] | None = None) -> vol.Schema:
                 CONF_SCAN_INTERVAL,
                 default=user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
             ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+            vol.Optional(
+                CONF_TIMEOUT,
+                default=user_input.get(CONF_TIMEOUT, DEFAULT_TIMEOUT),
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_TIMEOUT)),
+            vol.Optional(
+                CONF_VERIFY_SSL,
+                default=user_input.get(CONF_VERIFY_SSL, DEFAULT_VERIFY_SSL),
+            ): bool,
+            vol.Optional(
+                CONF_DEFAULT_PAUSE_MINUTES,
+                default=user_input.get(
+                    CONF_DEFAULT_PAUSE_MINUTES, DEFAULT_PAUSE_MINUTES
+                ),
+            ): vol.In(PAUSE_MINUTES),
+            vol.Optional(
+                CONF_ENABLE_BUTTONS,
+                default=user_input.get(CONF_ENABLE_BUTTONS, DEFAULT_ENABLE_ENTITIES),
+            ): bool,
+            vol.Optional(
+                CONF_ENABLE_SELECTS,
+                default=user_input.get(CONF_ENABLE_SELECTS, DEFAULT_ENABLE_ENTITIES),
+            ): bool,
+            vol.Optional(
+                CONF_ENABLE_SENSORS,
+                default=user_input.get(CONF_ENABLE_SENSORS, DEFAULT_ENABLE_ENTITIES),
+            ): bool,
+            vol.Optional(
+                CONF_ENABLE_SWITCHES,
+                default=user_input.get(CONF_ENABLE_SWITCHES, DEFAULT_ENABLE_ENTITIES),
+            ): bool,
         }
     )
 
@@ -51,7 +95,13 @@ async def _validate_input(
 ) -> dict[str, Any]:
     """Validate user input by querying Technitium."""
     session = async_get_clientsession(hass)
-    api = TechnitiumApiClient(session, user_input[CONF_URL], user_input[CONF_TOKEN])
+    api = TechnitiumApiClient(
+        session,
+        user_input[CONF_URL],
+        user_input[CONF_TOKEN],
+        timeout=user_input.get(CONF_TIMEOUT, DEFAULT_TIMEOUT),
+        verify_ssl=user_input.get(CONF_VERIFY_SSL, DEFAULT_VERIFY_SSL),
+    )
     settings = await api.async_test_connection()
     return {
         "title": user_input.get(CONF_NAME) or settings.get("dnsServerDomain") or DEFAULT_NAME,

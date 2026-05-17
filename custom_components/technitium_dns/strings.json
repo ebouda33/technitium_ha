@@ -8,7 +8,14 @@
           "name": "Name",
           "url": "Server URL",
           "token": "API token",
-          "scan_interval": "Scan interval"
+          "scan_interval": "Scan interval",
+          "timeout": "API timeout",
+          "verify_ssl": "Verify SSL certificate",
+          "default_pause_minutes": "Default pause duration",
+          "enable_buttons": "Create button entities",
+          "enable_selects": "Create select entities",
+          "enable_sensors": "Create sensor entities",
+          "enable_switches": "Create switch entities"
         }
       }
     },
@@ -29,7 +36,14 @@
           "name": "Name",
           "url": "Server URL",
           "token": "API token",
-          "scan_interval": "Scan interval"
+          "scan_interval": "Scan interval",
+          "timeout": "API timeout",
+          "verify_ssl": "Verify SSL certificate",
+          "default_pause_minutes": "Default pause duration",
+          "enable_buttons": "Create button entities",
+          "enable_selects": "Create select entities",
+          "enable_sensors": "Create sensor entities",
+          "enable_switches": "Create switch entities"
         }
       }
     },
@@ -42,13 +56,36 @@
   "entity": {
     "button": {
       "pause_blocking_1_minute": {
-        "name": "Pause blocking for 1 minute"
+        "name": "Pause 1 min"
       },
       "pause_blocking_5_minutes": {
-        "name": "Pause blocking for 5 minutes"
+        "name": "Pause 5 min"
       },
       "pause_blocking_10_minutes": {
-        "name": "Pause blocking for 10 minutes"
+        "name": "Pause 10 min"
+      },
+      "pause_blocking_30_minutes": {
+        "name": "Pause 30 min"
+      },
+      "pause_blocking_60_minutes": {
+        "name": "Pause 1 h"
+      },
+      "pause_blocking_selected": {
+        "name": "Pause selected duration"
+      },
+      "reactivate_blocking": {
+        "name": "Reactivate now"
+      },
+      "flush_cache": {
+        "name": "Flush DNS cache"
+      },
+      "force_update_blocklists": {
+        "name": "Update blocklists"
+      }
+    },
+    "select": {
+      "pause_duration": {
+        "name": "Pause duration"
       }
     },
     "switch": {
@@ -57,6 +94,20 @@
       }
     },
     "sensor": {
+      "blocking_status": {
+        "name": "Blocking status",
+        "state": {
+          "active": "Active",
+          "paused": "Paused",
+          "disabled": "Disabled"
+        }
+      },
+      "pause_remaining": {
+        "name": "Pause remaining"
+      },
+      "version": {
+        "name": "Version"
+      },
       "uptime": {
         "name": "Uptime"
       },
@@ -74,6 +125,21 @@
       },
       "total_clients": {
         "name": "Total clients"
+      },
+      "blocking_percentage": {
+        "name": "Blocking percentage"
+      },
+      "queries_today": {
+        "name": "Queries today"
+      },
+      "blocked_today": {
+        "name": "Blocked today"
+      },
+      "blocklist_count": {
+        "name": "Blocklists"
+      },
+      "blocklist_next_update": {
+        "name": "Next blocklist update"
       }
     }
   }

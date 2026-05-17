@@ -8,7 +8,14 @@
           "name": "Nom",
           "url": "URL du serveur",
           "token": "Token API",
-          "scan_interval": "Intervalle de mise a jour"
+          "scan_interval": "Intervalle de mise a jour",
+          "timeout": "Timeout API",
+          "verify_ssl": "Verifier le certificat SSL",
+          "default_pause_minutes": "Duree de pause par defaut",
+          "enable_buttons": "Creer les boutons",
+          "enable_selects": "Creer les listes de selection",
+          "enable_sensors": "Creer les capteurs",
+          "enable_switches": "Creer les interrupteurs"
         }
       }
     },
@@ -29,7 +36,14 @@
           "name": "Nom",
           "url": "URL du serveur",
           "token": "Token API",
-          "scan_interval": "Intervalle de mise a jour"
+          "scan_interval": "Intervalle de mise a jour",
+          "timeout": "Timeout API",
+          "verify_ssl": "Verifier le certificat SSL",
+          "default_pause_minutes": "Duree de pause par defaut",
+          "enable_buttons": "Creer les boutons",
+          "enable_selects": "Creer les listes de selection",
+          "enable_sensors": "Creer les capteurs",
+          "enable_switches": "Creer les interrupteurs"
         }
       }
     },
@@ -42,13 +56,36 @@
   "entity": {
     "button": {
       "pause_blocking_1_minute": {
-        "name": "Pause du blocage pendant 1 minute"
+        "name": "Pause 1 min"
       },
       "pause_blocking_5_minutes": {
-        "name": "Pause du blocage pendant 5 minutes"
+        "name": "Pause 5 min"
       },
       "pause_blocking_10_minutes": {
-        "name": "Pause du blocage pendant 10 minutes"
+        "name": "Pause 10 min"
+      },
+      "pause_blocking_30_minutes": {
+        "name": "Pause 30 min"
+      },
+      "pause_blocking_60_minutes": {
+        "name": "Pause 1 h"
+      },
+      "pause_blocking_selected": {
+        "name": "Pause duree choisie"
+      },
+      "reactivate_blocking": {
+        "name": "Reactiver maintenant"
+      },
+      "flush_cache": {
+        "name": "Vider le cache DNS"
+      },
+      "force_update_blocklists": {
+        "name": "Mettre a jour les blocklists"
+      }
+    },
+    "select": {
+      "pause_duration": {
+        "name": "Duree de pause"
       }
     },
     "switch": {
@@ -57,6 +94,20 @@
       }
     },
     "sensor": {
+      "blocking_status": {
+        "name": "Etat du blocage",
+        "state": {
+          "active": "Actif",
+          "paused": "En pause",
+          "disabled": "Desactive"
+        }
+      },
+      "pause_remaining": {
+        "name": "Temps de pause restant"
+      },
+      "version": {
+        "name": "Version"
+      },
       "uptime": {
         "name": "Duree de fonctionnement"
       },
@@ -74,6 +125,21 @@
       },
       "total_clients": {
         "name": "Clients totaux"
+      },
+      "blocking_percentage": {
+        "name": "Pourcentage bloque"
+      },
+      "queries_today": {
+        "name": "Requetes aujourd'hui"
+      },
+      "blocked_today": {
+        "name": "Requetes bloquees aujourd'hui"
+      },
+      "blocklist_count": {
+        "name": "Blocklists"
+      },
+      "blocklist_next_update": {
+        "name": "Prochaine mise a jour des blocklists"
       }
     }
   }
