@@ -46,7 +46,7 @@ When a new version is available:
 4. Restart Home Assistant.
 
 If HACS reports that a commit version cannot be used, make sure you are using a
-published GitHub release such as `v0.1.2`, not only the default branch commit.
+published GitHub release such as `v0.1.3`, not only the default branch commit.
 
 ## Manual Installation
 
