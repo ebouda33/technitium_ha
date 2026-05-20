@@ -16,9 +16,11 @@ The script creates the `v<version>` tag.
 
 If GitHub authentication is not available, run the same command without
 `--github-release`, or without `--push`, then report exactly what remains to be
-done. The preferred GitHub setup is either:
+done. The supported GitHub release setups are:
 
-- `gh auth login`, so `gh release create` can upload the release asset.
+- `GITHUB_TOKEN` exported in the shell. The token must have permission to create
+  releases and upload release assets for this repository.
+- `gh auth login`, if GitHub CLI is installed.
 - an SSH GitHub remote, so `git push github main v<version>` works without an
   interactive HTTPS username prompt.
 

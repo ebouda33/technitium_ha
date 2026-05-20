@@ -23,7 +23,8 @@ Arguments:
 Options:
   --remote <name>           Git remote to push to. Default: github.
   --push                    Push main and the tag to the selected remote.
-  --github-release          Create a GitHub release with gh and upload the ZIP.
+  --github-release          Create a GitHub release and upload the ZIP.
+                            Uses gh if available, otherwise GITHUB_TOKEN + curl.
   --change-summary <text>   One-line release summary for the release notes.
   -h, --help                Show this help.
 
@@ -87,6 +88,66 @@ if [[ -z "$REMOTE" ]]; then
   exit 2
 fi
 
+infer_github_repo() {
+  local remote_url gh_repo
+  remote_url="$(git config --get "remote.$REMOTE.url")"
+  gh_repo="$remote_url"
+  gh_repo="${gh_repo#git@github.com:}"
+  gh_repo="${gh_repo#https://github.com/}"
+  gh_repo="${gh_repo%.git}"
+  if [[ ! "$gh_repo" =~ ^[^/]+/[^/]+$ ]]; then
+    echo "Could not infer GitHub owner/repo from remote '$REMOTE': $remote_url" >&2
+    return 1
+  fi
+  printf '%s\n' "$gh_repo"
+}
+
+create_github_release_with_token() {
+  local gh_repo release_json upload_url release_id asset_name
+  gh_repo="$1"
+  asset_name="$(basename "$ZIP_PATH")"
+
+  release_json="$(
+    python3 - "$TAG" "$NOTES_PATH" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+tag = sys.argv[1]
+notes = Path(sys.argv[2]).read_text()
+print(json.dumps({
+    "tag_name": tag,
+    "name": tag,
+    "body": notes,
+    "draft": False,
+    "prerelease": False,
+}))
+PY
+  )"
+
+  release_id="$(
+    curl -fsS \
+      -X POST \
+      -H "Accept: application/vnd.github+json" \
+      -H "Authorization: Bearer $GITHUB_TOKEN" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      "https://api.github.com/repos/$gh_repo/releases" \
+      -d "$release_json" \
+    | python3 -c 'import json, sys; print(json.load(sys.stdin)["id"])'
+  )"
+
+  upload_url="https://uploads.github.com/repos/$gh_repo/releases/$release_id/assets?name=$asset_name"
+  curl -fsS \
+    -X POST \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer $GITHUB_TOKEN" \
+    -H "Content-Type: application/zip" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "$upload_url" \
+    --data-binary "@$ZIP_PATH" \
+    >/dev/null
+}
+
 TAG="v$VERSION"
 ZIP_PATH="$DIST_DIR/$INTEGRATION_NAME-$TAG.zip"
 NOTES_PATH="$DIST_DIR/release-notes-$TAG.md"
@@ -105,6 +166,21 @@ fi
 if [[ ! -f "$TEMPLATE" ]]; then
   echo "Release template not found: $TEMPLATE" >&2
   exit 1
+fi
+
+if [[ "$GITHUB_RELEASE" == true ]]; then
+  GH_REPO="$(infer_github_repo)"
+  if ! command -v gh >/dev/null 2>&1; then
+    if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+      echo "GitHub release creation needs either gh or GITHUB_TOKEN." >&2
+      echo "Set GITHUB_TOKEN to a token with repo release permissions, or omit --github-release." >&2
+      exit 1
+    fi
+    if ! command -v curl >/dev/null 2>&1; then
+      echo "curl is required when using GITHUB_TOKEN without gh." >&2
+      exit 1
+    fi
+  fi
 fi
 
 if git rev-parse "$TAG" >/dev/null 2>&1; then
@@ -178,23 +254,14 @@ if [[ "$PUSH" == true ]]; then
 fi
 
 if [[ "$GITHUB_RELEASE" == true ]]; then
-  if ! command -v gh >/dev/null 2>&1; then
-    echo "GitHub CLI is required for --github-release but was not found in PATH." >&2
-    exit 1
+  if command -v gh >/dev/null 2>&1; then
+    gh release create "$TAG" "$ZIP_PATH" \
+      --repo "$GH_REPO" \
+      --title "$TAG" \
+      --notes-file "$NOTES_PATH"
+  else
+    create_github_release_with_token "$GH_REPO"
   fi
-  REMOTE_URL="$(git config --get "remote.$REMOTE.url")"
-  GH_REPO="$REMOTE_URL"
-  GH_REPO="${GH_REPO#git@github.com:}"
-  GH_REPO="${GH_REPO#https://github.com/}"
-  GH_REPO="${GH_REPO%.git}"
-  if [[ ! "$GH_REPO" =~ ^[^/]+/[^/]+$ ]]; then
-    echo "Could not infer GitHub owner/repo from remote '$REMOTE': $REMOTE_URL" >&2
-    exit 1
-  fi
-  gh release create "$TAG" "$ZIP_PATH" \
-    --repo "$GH_REPO" \
-    --title "$TAG" \
-    --notes-file "$NOTES_PATH"
 fi
 
 echo "Release prepared: $TAG"
